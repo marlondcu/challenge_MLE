@@ -31,6 +31,8 @@ jobs:
       - name: Build Docker Image
         run: docker buildx build --platform linux/amd64 -t us-central1-docker.pkg.dev/possible-byway-452305-h4/my-repo/api-service:latest .
 
+      - name: Check Built Images  
+        run: docker images
 
       - name: Push Docker Image to Google Artifact Registry
         run: docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/my-repo/api-service:latest 
