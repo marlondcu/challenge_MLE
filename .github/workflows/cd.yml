@@ -22,17 +22,26 @@ jobs:
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v1
 
+      - name: Verify GCloud Authentication
+        run: gcloud auth list
+
       - name: Configure Docker Authentication
         run: gcloud auth configure-docker us-central1-docker.pkg.dev
 
-      - name: Verificar arquivos no diretório
-        run: ls -la
+      - name: Manually Authenticate Docker
+        run: gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://us-central1-docker.pkg.dev
+
+      - name: Verify Docker Context
+        run: docker context ls && docker images
 
       - name: Enable Docker Buildx
         run: docker buildx create --use
 
       - name: Build and Push Docker Image
-        run: docker buildx build --platform linux/amd64 --push -t us-central1-docker.pkg.dev/possible-byway-452305-h4/my-repo/api-service:latest .
+        run: |
+          IMAGE_NAME="us-central1-docker.pkg.dev/possible-byway-452305-h4/my-repo/api-service:latest"
+          echo "Using IMAGE_NAME=$IMAGE_NAME"
+          docker buildx build --platform linux/amd64 --push -t $IMAGE_NAME .
 
       - name: Deploy to Cloud Run
         run: gcloud run deploy api-service \
@@ -42,4 +51,3 @@ jobs:
             --allow-unauthenticated \
             --port 8080 \
             --set-env-vars PORT=8080
- 
