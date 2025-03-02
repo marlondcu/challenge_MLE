@@ -28,7 +28,9 @@ jobs:
       - name: Debug Docker Build Command
         run: echo "docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/my-repo/api-service:latest ."
 
-
+      - name: Enable Docker Buildx
+        run: docker buildx create --use
+        
       - name: Build Docker Image
         run: docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/my-repo/api-service:latest .
 
