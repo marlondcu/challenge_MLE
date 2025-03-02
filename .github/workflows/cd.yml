@@ -25,17 +25,12 @@ jobs:
       - name: Configure Docker Authentication
         run: gcloud auth configure-docker us-central1-docker.pkg.dev
 
-      - name: Debug Docker Build Command
-        run: echo "docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/my-repo/api-service:latest ."
-
-      - name: Enable Docker Buildx
-        run: docker buildx create --use
-        
       - name: Build Docker Image
-        run: docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/my-repo/api-service:latest .
+        run: docker build -t us-central1-docker.pkg.dev/possible-byway-452305-h4/my-repo/api-service:latest .
+        
 
       - name: Push Docker Image to Google Artifact Registry
-        run: docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/my-repo/api-service:latest
+        run: docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/my-repo/api-service:latest 
 
       - name: Deploy to Cloud Run
         run: gcloud run deploy api-service \
